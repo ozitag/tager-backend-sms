@@ -36,7 +36,5 @@ class TagerBackendSmsServiceProvider extends ServiceProvider
                 FlushSmsTemplatesCommand::class,
             ]);
         }
-
-        parent::boot();
     }
 }
