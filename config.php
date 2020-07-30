@@ -9,7 +9,7 @@ return [
             'apiKey' => 'XXXXXX'
         ]
     ],
-    'valid_phones' => [],
+    'allow_phones' => [],
     'text_template' => '{text}',
     'templates' => [
         'newOrder' => [

@@ -17,7 +17,7 @@ class TemplateHelper
     /**
      * @param $templateId
      * @param array $templateFields
-     * @return string|string[]
+     * @return string|null
      */
     public function getRawText($templateId, $templateFields = [])
     {
