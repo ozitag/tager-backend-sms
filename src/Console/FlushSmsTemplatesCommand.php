@@ -45,8 +45,7 @@ class FlushSmsTemplatesCommand extends Command
                     }
                 }
 
-                $model->subject = $data['subject'] ?? '';
-                $model->body = $data['body'] ?? '';
+                $model->body = $data['value'] ?? '';
             }
 
             $model->name = $data['name'];
