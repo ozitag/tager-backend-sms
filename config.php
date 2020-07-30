@@ -13,7 +13,7 @@ return [
     'text_template' => '{text}',
     'templates' => [
         'newOrder' => [
-            'label' => 'New Order',
+            'name' => 'New Order',
             'text' => '.....',
             'templateParams' => [
                 'name' => 'Name',
