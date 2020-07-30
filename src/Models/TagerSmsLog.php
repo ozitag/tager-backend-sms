@@ -18,8 +18,8 @@ class TagerSmsLog extends Model
         'recipient',
         'body',
         'status',
-        'debug',
         'error',
+        'service_response',
     ];
 
     public function template()

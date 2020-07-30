@@ -30,8 +30,8 @@ class TagerSms extends Migration
             $table->string('recipient');
             $table->string('body');
             $table->string('status');
-            $table->boolean('debug')->default(false);
             $table->text('error')->nullable();
+            $table->text('service_response')->nullable();
             $table->timestamps();
 
             $table->foreign('template_id')->references('id')->on('tager_sms_templates');

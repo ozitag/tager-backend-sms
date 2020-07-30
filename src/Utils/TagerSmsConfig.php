@@ -2,6 +2,8 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
+use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
+
 class TagerSmsConfig
 {
     public static function getTemplate($template)
@@ -38,14 +40,6 @@ class TagerSmsConfig
     }
 
     /**
-     * @return boolean
-     */
-    public static function isDebug()
-    {
-        return (boolean)config('tager-sms.debug', false);
-    }
-
-    /**
      * @return bool
      */
     public static function hasDatabase()
@@ -56,17 +50,21 @@ class TagerSmsConfig
     /**
      * @return string
      */
-    public static function getTextTemplate()
+    public static function getMessageTemplate()
     {
-        return (string)config('tager-sms.text_template', '{text}');
+        return (string)config('tager-sms.message_template', '{text}');
     }
 
     /**
-     * @return array
+     * @return array|string
      */
     public static function getAllowedPhones()
     {
         $value = config('tager-sms.allow_phones');
+        if (is_null($value)) {
+            return '*';
+        }
+
         if (!$value) {
             return [];
         }
@@ -83,8 +81,26 @@ class TagerSmsConfig
     {
         $value = config('tager-sms.service.params', []);
         if (!is_array($value)) {
-            throw new \Exception('Invalid service params - must be an array');
+            throw new TagerSmsInvalidConfigurationException('Invalid service params - must be an array');
         }
+        return $value;
+    }
+
+    /**
+     * @return callable|\Closure
+     * @throws TagerSmsInvalidConfigurationException
+     */
+    public static function getRecipientFormatter()
+    {
+        $value = config('tager-sms.recipient_formatter');
+        if (!$value) {
+            return null;
+        }
+
+        if ($value instanceof \Closure == false || !is_callable($value)) {
+            throw new TagerSmsInvalidConfigurationException('Formatter must be a function');
+        }
+
         return $value;
     }
 }

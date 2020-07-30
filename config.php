@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'debug' => false,
     'no_database' => false,
     'service' => [
         'id' => 'rocketsms',
@@ -10,7 +9,7 @@ return [
         ]
     ],
     'allow_phones' => [],
-    'text_template' => '{text}',
+    'message_template' => '{text}',
     'templates' => [
         'newOrder' => [
             'name' => 'New Order',
@@ -21,5 +20,8 @@ return [
             'recipients' => [],
             'value' => '.....',
         ]
-    ]
+    ],
+    'recipient_formatter' => function ($phone) {
+        return $phone;
+    }
 ];

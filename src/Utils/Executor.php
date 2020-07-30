@@ -3,11 +3,10 @@
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
 use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
-use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsInDebugModeJob;
+use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsException;
+use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
 use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsJob;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
-use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
-use OZiTAG\Tager\Backend\Sms\Services\ServiceFactory;
 
 class Executor
 {
@@ -58,27 +57,12 @@ class Executor
             return null;
         }
 
-        $baseTemplate = TagerSmsConfig::getTextTemplate();
+        $baseTemplate = TagerSmsConfig::getMessageTemplate();
         if (empty($baseTemplate)) {
             return $result;
         }
 
         return str_replace('{text}', $result, $baseTemplate);
-    }
-
-    /**
-     * @param $recipient
-     * @return bool
-     */
-    private function isRecipientAllowed($recipient)
-    {
-        $validPhones = TagerSmsConfig::getAllowedPhones();
-        return empty($validPhones) || in_array($recipient, $validPhones);
-    }
-
-    private function onRecipientDisallow($recipient)
-    {
-
     }
 
     /**
@@ -90,37 +74,26 @@ class Executor
             return [];
         }
 
-        $all = is_array($this->recipients) ? $this->recipients : [$this->recipients];
-
-        $result = [];
-        foreach ($all as $recipient) {
-            if ($this->isRecipientAllowed($recipient)) {
-                $result[] = $recipient;
-            } else {
-                $this->onRecipientDisallow($recipient);
-            }
-        }
-
-        return $result;
+        return is_array($this->recipients) ? $this->recipients : [$this->recipients];
     }
 
-    private function createLogItem($recipient, $message, $isDebug = false)
+    private function createLogItem($recipient, $message)
     {
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
-            'status' => LogStatus::Created,
-            'debug' => $isDebug
+            'status' => LogStatus::Created
         ]);
     }
 
-    private function sendInDebugMode($recipient, $message)
+    private function preparePhoneNumber($recipient)
     {
-        $log = $this->createLogItem($recipient, $message, true);
+        $formatter = TagerSmsConfig::getRecipientFormatter();
+        if ($formatter) {
+            $recipient = call_user_func($formatter, $recipient);
+        }
 
-        dispatch(new SendSmsInDebugModeJob(
-            $log->id
-        ));
+        return preg_replace('/[^0-9,.]/', '', $recipient);
     }
 
     /**
@@ -130,7 +103,9 @@ class Executor
      */
     private function send($recipient, $message)
     {
-        $log = $this->createLogItem($recipient, $message, false);
+        $recipient = $this->preparePhoneNumber($recipient);
+
+        $log = $this->createLogItem($recipient, $message);
 
         dispatch(new SendSmsJob(
             $recipient,
@@ -143,20 +118,13 @@ class Executor
     {
         $message = $this->getRawMessage();
         if (!$message) {
-            throw new \Exception('Message is empty');
+            throw new TagerSmsException('Message is empty');
         }
 
         $recipients = $this->getRecipients();
-        if (empty($recipients)) {
-            throw new \Exception('Recipient list is empty');
-        }
 
         foreach ($recipients as $recipient) {
-            if (TagerSmsConfig::isDebug()) {
-                $this->sendInDebugMode($recipient, $message);
-            } else {
-                $this->send($recipient, $message);
-            }
+            $this->send($recipient, $message);
         }
     }
 }

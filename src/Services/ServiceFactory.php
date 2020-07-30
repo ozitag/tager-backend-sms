@@ -2,10 +2,27 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Services;
 
+use OZiTAG\Tager\Backend\Sms\Enums\Service;
+
 class ServiceFactory
 {
-    public static function create($serviceId, $serviceParams)
+    /**
+     * @param $serviceId
+     * @param array $serviceParams
+     * @return IService|null
+     */
+    public static function create($serviceId, $serviceParams = [])
     {
-        return null;
+        switch ($serviceId) {
+            case Service::RocketSms:
+                $service = new RocketSmsService();
+                break;
+            default:
+                return null;
+        }
+
+        $service->init($serviceParams);
+
+        return $service;
     }
 }
