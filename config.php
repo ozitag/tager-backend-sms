@@ -9,13 +9,17 @@ return [
             'apiKey' => 'XXXXXX'
         ]
     ],
+    'valid_phones' => [],
+    'text_template' => '{text}',
     'templates' => [
         'newOrder' => [
             'label' => 'New Order',
+            'text' => '.....',
             'templateParams' => [
                 'name' => 'Name',
                 'orderId' => 'Order Id'
-            ]
+            ],
+            'recipients' => []
         ]
     ]
 ];
