@@ -2,10 +2,22 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
+use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
+use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsInDebugModeJob;
+use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsJob;
+use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
+use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
 use OZiTAG\Tager\Backend\Sms\Services\ServiceFactory;
 
 class Executor
 {
+    private $smsLogRepository;
+
+    public function __construct(SmsLogRepository $smsLogRepository)
+    {
+        $this->smsLogRepository = $smsLogRepository;
+    }
+
     private $recipients = [];
 
     private $template = null;
@@ -92,25 +104,39 @@ class Executor
         return $result;
     }
 
-    private function sendInDebugMode($recipients, $message)
+    private function createLogItem($recipient, $message, $isDebug = false)
     {
-
+        return $this->smsLogRepository->fillAndSave([
+            'recipient' => $recipient,
+            'body' => $message,
+            'status' => LogStatus::Created,
+            'debug' => $isDebug
+        ]);
     }
 
-    private function send($recipients, $message)
+    private function sendInDebugMode($recipient, $message)
     {
-        $serviceId = TagerSmsConfig::getServiceId();
-        if (empty($serviceId)) {
-            throw new \Exception('Service is not set');
-        }
+        $log = $this->createLogItem($recipient, $message, true);
 
-        $service = ServiceFactory::create($serviceId, TagerSmsConfig::getServiceParams());
+        dispatch(new SendSmsInDebugModeJob(
+            $log->id
+        ));
+    }
 
-        if (count($recipients) == 1) {
-            $service->sendSingle($recipients[0], $message);
-        } else {
-            $service->sendBatch($recipients, $message);
-        }
+    /**
+     * @param string $recipient
+     * @param string $message
+     * @throws \Exception
+     */
+    private function send($recipient, $message)
+    {
+        $log = $this->createLogItem($recipient, $message, false);
+
+        dispatch(new SendSmsJob(
+            $recipient,
+            $message,
+            $log->id
+        ));
     }
 
     public function execute()
@@ -125,10 +151,12 @@ class Executor
             throw new \Exception('Recipient list is empty');
         }
 
-        if (TagerSmsConfig::isDebug()) {
-            $this->sendInDebugMode($recipients, $message);
-        } else {
-            $this->send($recipients, $message);
+        foreach ($recipients as $recipient) {
+            if (TagerSmsConfig::isDebug()) {
+                $this->sendInDebugMode($recipient, $message);
+            } else {
+                $this->send($recipient, $message);
+            }
         }
     }
 }
