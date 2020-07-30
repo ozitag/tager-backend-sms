@@ -4,6 +4,8 @@ namespace OZiTAG\Tager\Backend\Sms\Jobs;
 
 use OZiTAG\Tager\Backend\Core\Jobs\QueueJob;
 use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
+use OZiTAG\Tager\Backend\Sms\Services\ServiceFactory;
+use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
 class SendSmsJob extends QueueJob
 {
@@ -25,9 +27,16 @@ class SendSmsJob extends QueueJob
         dispatch(new SetLogStatusJob($this->logId, $status, $error));
     }
 
-    private function execute()
+    private function service()
     {
+        $service = TagerSmsConfig::getServiceId();
+        if (empty($service)) {
+            throw new \Exception('Sender Service is not set');
+        }
 
+        $serviceParams = TagerSmsConfig::getServiceParams();
+
+        return ServiceFactory::create($service, $serviceParams);
     }
 
     public function handle()
@@ -35,7 +44,7 @@ class SendSmsJob extends QueueJob
         $this->setLogStatus(LogStatus::Sending);
 
         try {
-            $this->execute();
+            $this->service()->send($this->recipient, $this->message);
             $this->setLogStatus(LogStatus::Success);
         } catch (\Exception $exception) {
             $this->setLogStatus(LogStatus::Failure, $exception->getMessage());

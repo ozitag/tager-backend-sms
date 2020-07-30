@@ -15,17 +15,15 @@ class TagerSms
 
     public function sendRaw($recipients, $text)
     {
-        $sms = new Executor();
-        $sms->setRecipients($recipients);
-        $sms->setMessage($text);
-        $sms->execute();
+        $this->executor->setRecipients($recipients);
+        $this->executor->setMessage($text);
+        $this->executor->execute();
     }
 
     public function sendUsingTemplate($recipients, $template, $templateFields = null)
     {
-        $sms = new Executor();
-        $sms->setRecipients($recipients);
-        $sms->setTemplate($template, $templateFields);
-        $sms->execute();
+        $this->executor->setRecipients($recipients);
+        $this->executor->setTemplate($template, $templateFields);
+        $this->executor->execute();
     }
 }

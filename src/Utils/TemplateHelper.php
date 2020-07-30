@@ -11,7 +11,7 @@ class TemplateHelper
             return null;
         }
 
-        return isset($configTemplate['text']) ? $configTemplate['text'] : null;
+        return isset($configTemplate['value']) ? $configTemplate['value'] : null;
     }
 
     /**
@@ -27,7 +27,7 @@ class TemplateHelper
         }
 
         foreach ($templateFields as $field => $value) {
-            $text = str_replace('{' . $field . '}', $value);
+            $text = str_replace('{' . $field . '}', $value, $text);
         }
 
         return $text;

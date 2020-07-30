@@ -4,6 +4,7 @@ namespace OZiTAG\Tager\Backend\Sms\Jobs;
 
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
+use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
 
 class SetLogStatusJob extends Job
@@ -21,7 +22,7 @@ class SetLogStatusJob extends Job
         $this->error = $error;
     }
 
-    public function handle(SmsTemplateRepository $repository)
+    public function handle(SmsLogRepository $repository)
     {
         $found = $repository->setById($this->logId);
         if (!$found) {
