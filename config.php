@@ -14,12 +14,12 @@ return [
     'templates' => [
         'newOrder' => [
             'name' => 'New Order',
-            'text' => '.....',
             'templateParams' => [
                 'name' => 'Name',
                 'orderId' => 'Order Id'
             ],
-            'recipients' => []
+            'recipients' => [],
+            'value' => '.....',
         ]
     ]
 ];
