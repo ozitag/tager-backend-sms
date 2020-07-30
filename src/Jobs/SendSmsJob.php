@@ -3,10 +3,10 @@
 namespace OZiTAG\Tager\Backend\Sms\Jobs;
 
 use OZiTAG\Tager\Backend\Core\Jobs\QueueJob;
+use OZiTAG\Tager\Backend\Sms\Contracts\IService;
 use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsServiceException;
-use OZiTAG\Tager\Backend\Sms\Services\IService;
 use OZiTAG\Tager\Backend\Sms\Services\ServiceFactory;
 use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
