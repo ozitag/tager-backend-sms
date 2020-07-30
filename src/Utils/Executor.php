@@ -90,7 +90,7 @@ class Executor
     {
         $formatter = TagerSmsConfig::getRecipientFormatter();
         if ($formatter) {
-            $recipient = call_user_func($formatter, $recipient);
+            $recipient = $formatter->format($recipient);
         }
 
         return preg_replace('/[^0-9,.]/', '', $recipient);

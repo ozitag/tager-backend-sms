@@ -21,7 +21,6 @@ return [
             'value' => '.....',
         ]
     ],
-    'recipient_formatter' => function ($phone) {
-        return $phone;
-    }
+    'recipient_formatter' => null
+
 ];

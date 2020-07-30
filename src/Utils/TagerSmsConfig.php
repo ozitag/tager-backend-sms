@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
+use OZiTAG\Tager\Backend\Sms\Contracts\IRecipientFormatter;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
 
 class TagerSmsConfig
@@ -87,7 +88,7 @@ class TagerSmsConfig
     }
 
     /**
-     * @return callable|\Closure
+     * @return IRecipientFormatter
      * @throws TagerSmsInvalidConfigurationException
      */
     public static function getRecipientFormatter()
@@ -97,10 +98,10 @@ class TagerSmsConfig
             return null;
         }
 
-        if ($value instanceof \Closure == false || !is_callable($value)) {
-            throw new TagerSmsInvalidConfigurationException('Formatter must be a function');
+        if (class_implements($value, IRecipientFormatter::class) == false) {
+            throw new TagerSmsInvalidConfigurationException('Formatter should implements IRecipientFormatter contract');
         }
 
-        return $value;
+        return new $value;
     }
 }

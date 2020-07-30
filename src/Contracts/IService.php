@@ -1,6 +1,6 @@
 <?php
 
-namespace OZiTAG\Tager\Backend\Sms\Services;
+namespace OZiTAG\Tager\Backend\Sms\Contracts;
 
 interface IService
 {

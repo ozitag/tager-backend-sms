@@ -2,6 +2,8 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Services;
 
+use OZiTAG\Tager\Backend\Sms\Contracts\IService;
+
 abstract class BaseService implements IService
 {
     protected $params = [];
