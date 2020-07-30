@@ -70,7 +70,7 @@ class TagerSmsConfig
             return [];
         }
 
-        return is_array($value) ? $value : [(string)$value];
+        return is_array($value) ? $value : explode(',', $value);
     }
 
     public static function getServiceId()
