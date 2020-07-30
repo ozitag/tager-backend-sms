@@ -4,6 +4,7 @@ namespace OZiTAG\Tager\Backend\Sms\Console;
 
 use Illuminate\Console\Command;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
+use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
 class FlushSmsTemplatesCommand extends Command
 {
@@ -23,6 +24,10 @@ class FlushSmsTemplatesCommand extends Command
 
     public function handle(SmsTemplateRepository $repository)
     {
+        if (TagerSmsConfig::hasDatabase() == false) {
+            return;
+        }
+        
         $templates = config()->get('tager-sms.templates');
         if (!$templates) {
             return;
