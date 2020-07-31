@@ -84,7 +84,7 @@ class Executor
         return is_array($this->recipients) ? $this->recipients : [$this->recipients];
     }
 
-    private function createLogItem($recipient, $message)
+    private function createLogItem($recipient, $message, $status = LogStatus::Created)
     {
         if (TagerSmsConfig::hasDatabase() == false) {
             return null;
@@ -93,7 +93,7 @@ class Executor
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
-            'status' => LogStatus::Created
+            'status' => $status
         ]);
     }
 
@@ -115,6 +115,11 @@ class Executor
     private function send($recipient, $message)
     {
         $recipient = $this->preparePhoneNumber($recipient);
+
+        if (TagerSmsConfig::isDisabled()) {
+            $this->createLogItem($recipient, $message, LogStatus::Disabled);
+            return;
+        }
 
         $log = $this->createLogItem($recipient, $message);
 

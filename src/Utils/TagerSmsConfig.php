@@ -49,6 +49,14 @@ class TagerSmsConfig
     }
 
     /**
+     * @return bool
+     */
+    public static function isDisabled()
+    {
+        return (boolean)config('tager-sms.disabled', false);
+    }
+
+    /**
      * @return string
      */
     public static function getMessageTemplate()

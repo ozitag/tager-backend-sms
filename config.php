@@ -2,6 +2,7 @@
 
 return [
     'no_database' => false,
+    'disabled' => false,
     'service' => [
         'id' => 'rocketsms',
         'params' => [
