@@ -2,17 +2,31 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
+use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
+
 class TemplateHelper
 {
+    private $templateRepository;
+
+    public function __construct(SmsTemplateRepository $templateRepository)
+    {
+        $this->templateRepository = $templateRepository;
+    }
+
     private function getTemplateText($templateId)
     {
-        $configTemplate = TagerSmsConfig::getTemplate($templateId);
-        if (!$configTemplate) {
-            return null;
+        if (TagerSmsConfig::hasDatabase()) {
+            $templateDatabase = $this->templateRepository->findByTemplate($templateId);
+            if ($templateDatabase && $templateDatabase->changed_by_admin) {
+                return $templateDatabase->body;
+            }
         }
 
-        return isset($configTemplate['value']) ? $configTemplate['value'] : null;
+        $configTemplate = TagerSmsConfig::getTemplate($templateId);
+
+        return $configTemplate && isset($configTemplate['value']) ? $configTemplate['value'] : null;
     }
+
 
     /**
      * @param $templateId
@@ -22,6 +36,7 @@ class TemplateHelper
     public function getRawText($templateId, $templateFields = [])
     {
         $text = $this->getTemplateText($templateId);
+
         if (!$text) {
             return null;
         }
@@ -31,5 +46,24 @@ class TemplateHelper
         }
 
         return $text;
+    }
+
+    public function getTemplateRecipients($template)
+    {
+        if (TagerSmsConfig::hasDatabase()) {
+            $templateDatabase = $this->templateRepository->findByTemplate($template);
+            if ($templateDatabase && $templateDatabase->changed_by_admin) {
+                return $templateDatabase->recipients ? explode(',', $templateDatabase->recipients) : [];
+            }
+        }
+
+        $configTemplate = TagerSmsConfig::getTemplate($template);
+
+        $recipients = isset($configTemplate['recipients']) ? $configTemplate['recipients'] : [];
+        if (is_string($recipients)) {
+            $recipients = explode(',', $recipients);
+        }
+
+        return $recipients;
     }
 }

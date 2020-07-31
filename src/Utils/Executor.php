@@ -10,11 +10,16 @@ use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 
 class Executor
 {
+    /** @var SmsLogRepository */
     private $smsLogRepository;
 
-    public function __construct(SmsLogRepository $smsLogRepository)
+    /** @var TemplateHelper */
+    private $templateHelper;
+
+    public function __construct(SmsLogRepository $smsLogRepository, TemplateHelper $templateHelper)
     {
         $this->smsLogRepository = $smsLogRepository;
+        $this->templateHelper = $templateHelper;
     }
 
     private $recipients = [];
@@ -47,8 +52,7 @@ class Executor
     private function getRawMessage()
     {
         if (!empty($this->template)) {
-            $templateHelper = new TemplateHelper();
-            $result = $templateHelper->getRawText($this->template, $this->templateFields);
+            $result = $this->templateHelper->getRawText($this->template, $this->templateFields);
         } else {
             $result = $this->message;
         }
@@ -71,6 +75,9 @@ class Executor
     private function getRecipients()
     {
         if (empty($this->recipients)) {
+            if (!empty($this->template)) {
+                return $this->templateHelper->getTemplateRecipients($this->template);
+            }
             return [];
         }
 
