@@ -28,9 +28,6 @@ class FlushSmsTemplatesCommand extends Command
             return;
         }
 
-        var_dump(1);
-        exit;
-
         $templates = config()->get('tager-sms.templates');
         if (!$templates) {
             return;
