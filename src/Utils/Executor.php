@@ -93,7 +93,8 @@ class Executor
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
-            'status' => $status
+            'status' => $status,
+            'template_id' => $this->templateHelper->getTemplateDatabaseId($this->template)
         ]);
     }
 
@@ -121,7 +122,7 @@ class Executor
             return;
         }
 
-        $log = $this->createLogItem($recipient, $message);
+        $log = $this->createLogItem($recipient, $message, LogStatus::Created);
 
         dispatch(new SendSmsJob(
             $recipient,

@@ -13,6 +13,7 @@ class TemplateHelper
         $this->templateRepository = $templateRepository;
     }
 
+
     private function getTemplateText($templateId)
     {
         if (TagerSmsConfig::hasDatabase()) {
@@ -27,15 +28,27 @@ class TemplateHelper
         return $configTemplate && isset($configTemplate['value']) ? $configTemplate['value'] : null;
     }
 
+    public function getTemplateDatabaseId($template)
+    {
+        if (TagerSmsConfig::hasDatabase()) {
+            $templateDatabase = $this->templateRepository->findByTemplate($template);
+            if ($templateDatabase) {
+                return $templateDatabase->id;
+            }
+        }
+
+        return null;
+    }
+
 
     /**
-     * @param $templateId
+     * @param $template
      * @param array $templateFields
      * @return string|null
      */
-    public function getRawText($templateId, $templateFields = [])
+    public function getRawText($template, $templateFields = [])
     {
-        $text = $this->getTemplateText($templateId);
+        $text = $this->getTemplateText($template);
 
         if (!$text) {
             return null;
