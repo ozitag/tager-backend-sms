@@ -23,16 +23,16 @@ class TagerSmsConfig
      * @param string $template
      * @return array
      */
-    public function getTemplateVariables($template)
+    public static function getTemplateFields($template)
     {
-        $template = $this->getTemplate($template);
+        $template = self::getTemplate($template);
 
-        $params = $template['templateParams'] ?? [];
+        $params = $template['templateFields'] ?? [];
 
         $result = [];
         foreach ($params as $name => $label) {
             $result[] = [
-                'key' => $name,
+                'name' => $name,
                 'label' => $label
             ];
         }

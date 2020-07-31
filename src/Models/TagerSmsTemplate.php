@@ -18,7 +18,8 @@ class TagerSmsTemplate extends Model
      */
     protected $fillable = [
         'name',
-        'value',
-        'recipients'
+        'body',
+        'recipients',
+        'changed_by_admin'
     ];
 }

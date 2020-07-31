@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use OZiTAG\Tager\Backend\Sms\Controllers\AdminController;
+use OZiTAG\Tager\Backend\Sms\Controllers\AdminTemplatesController;
+use OZiTAG\Tager\Backend\Sms\Controllers\AdminLogsController;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['passport:administrators', 'auth:api']], function () {
-    Route::get('/sms/logs', [AdminController::class, 'logs']);
-    Route::get('/sms/templates', [AdminController::class, 'templates']);
-    Route::get('/sms/templates/{id}', [AdminController::class, 'view']);
-    Route::put('/sms/templates/{id}', [AdminController::class, 'update']);
+    Route::get('/sms/logs', [AdminLogsController::class, 'index']);
+
+    Route::get('/sms/templates', [AdminTemplatesController::class, 'index']);
+    Route::get('/sms/templates/{id}', [AdminTemplatesController::class, 'view']);
+    Route::put('/sms/templates/{id}', [AdminTemplatesController::class, 'update']);
 });
