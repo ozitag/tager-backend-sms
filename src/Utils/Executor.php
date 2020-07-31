@@ -86,6 +86,10 @@ class Executor
 
     private function createLogItem($recipient, $message)
     {
+        if (TagerSmsConfig::hasDatabase() == false) {
+            return null;
+        }
+
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
@@ -117,7 +121,7 @@ class Executor
         dispatch(new SendSmsJob(
             $recipient,
             $message,
-            $log->id
+            $log ? $log->id : null
         ));
     }
 

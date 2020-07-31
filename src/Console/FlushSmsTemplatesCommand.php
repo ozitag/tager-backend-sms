@@ -27,7 +27,10 @@ class FlushSmsTemplatesCommand extends Command
         if (TagerSmsConfig::hasDatabase() == false) {
             return;
         }
-        
+
+        var_dump(1);
+        exit;
+
         $templates = config()->get('tager-sms.templates');
         if (!$templates) {
             return;

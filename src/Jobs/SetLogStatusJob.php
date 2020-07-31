@@ -25,6 +25,10 @@ class SetLogStatusJob extends Job
 
     public function handle(SmsLogRepository $repository)
     {
+        if (!$this->logId) {
+            return;
+        }
+
         $found = $repository->setById($this->logId);
         if (!$found) {
             return;
