@@ -5,7 +5,7 @@ namespace OZiTAG\Tager\Backend\Sms;
 use Illuminate\Support\ServiceProvider;
 use OZiTAG\Tager\Backend\Sms\Console\FlushSmsTemplatesCommand;
 
-class TagerBackendSmsServiceProvider extends ServiceProvider
+class SmsServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
