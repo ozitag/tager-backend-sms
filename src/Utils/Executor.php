@@ -90,6 +90,7 @@ class Executor
             return null;
         }
 
+        $this->smsLogRepository->reset();
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
