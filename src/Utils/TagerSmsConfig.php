@@ -70,7 +70,8 @@ class TagerSmsConfig
     public static function getAllowedPhones()
     {
         $value = config('tager-sms.allow_phones');
-        if (is_null($value)) {
+
+        if (is_null($value) || $value == '*') {
             return '*';
         }
 
