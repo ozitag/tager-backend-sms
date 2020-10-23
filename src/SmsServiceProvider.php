@@ -3,7 +3,9 @@
 namespace OZiTAG\Tager\Backend\Sms;
 
 use Illuminate\Support\ServiceProvider;
+use OZiTAG\Tager\Backend\Rbac\TagerScopes;
 use OZiTAG\Tager\Backend\Sms\Console\FlushSmsTemplatesCommand;
+use OZiTAG\Tager\Backend\Sms\Enums\SmsScope;
 
 class SmsServiceProvider extends ServiceProvider
 {
@@ -36,5 +38,11 @@ class SmsServiceProvider extends ServiceProvider
                 FlushSmsTemplatesCommand::class,
             ]);
         }
+
+        TagerScopes::registerGroup('SMS', [
+            SmsScope::EditTemplates => 'Edit templates',
+            SmsScope::ViewTemplates => 'View templates',
+            SmsScope::ViewLogs => 'View logs',
+        ]);
     }
 }
