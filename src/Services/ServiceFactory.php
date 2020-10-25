@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Services;
 
+use OZiTAG\Tager\Backend\Sms\Contracts\IService;
 use OZiTAG\Tager\Backend\Sms\Enums\Service;
 
 class ServiceFactory

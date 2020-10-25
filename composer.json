@@ -13,7 +13,9 @@
   ],
   "require": {
     "ozitag/tager-backend-core": "^1.4",
-    "ozitag/tager-backend-rbac": "^1.0"
+    "ozitag/tager-backend-rbac": "^1.0",
+    "ext-curl": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

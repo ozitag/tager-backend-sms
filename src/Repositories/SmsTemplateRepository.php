@@ -12,6 +12,10 @@ class SmsTemplateRepository extends EloquentRepository
         parent::__construct($model);
     }
 
+    /**
+     * @param $template
+     * @return TagerSmsTemplate|null
+     */
     public function findByTemplate($template)
     {
         return TagerSmsTemplate::whereTemplate($template)->first();

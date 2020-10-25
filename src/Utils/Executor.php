@@ -4,7 +4,6 @@ namespace OZiTAG\Tager\Backend\Sms\Utils;
 
 use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsException;
-use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
 use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsJob;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 

@@ -13,6 +13,11 @@ class TagerSms
         $this->executor = $executor;
     }
 
+    /**
+     * @param string[] $recipients
+     * @param string $text
+     * @throws Exceptions\TagerSmsException
+     */
     public function sendRaw($recipients, $text)
     {
         $this->executor->setRecipients($recipients);
@@ -20,6 +25,12 @@ class TagerSms
         $this->executor->execute();
     }
 
+    /**
+     * @param string[] $recipients
+     * @param string $template
+     * @param string[]|null $templateFields
+     * @throws Exceptions\TagerSmsException
+     */
     public function sendUsingTemplate($recipients, $template, $templateFields = null)
     {
         $this->executor->setRecipients($recipients);
