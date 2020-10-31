@@ -35,7 +35,7 @@ class AdminLogsController extends CrudController
             'updatedAt' => 'updated_at:datetime'
         ]);
 
-        $this->setIndexAction((new IndexAction())->enablePagination());
+        $this->setIndexAction((new IndexAction())->enablePagination()->enableSearchByQuery());
     }
 
 }
