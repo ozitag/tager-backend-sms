@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Controllers;
 
+use OZiTAG\Tager\Backend\Crud\Actions\StoreOrUpdateAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\CrudController;
 use OZiTAG\Tager\Backend\Sms\Jobs\UpdateTemplateJob;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsTemplateRepository;
@@ -49,7 +50,6 @@ class AdminTemplatesController extends CrudController
             }
         ]);
 
-        $this->setUpdateAction(UpdateTemplateRequest::class, UpdateTemplateJob::class);
+        $this->setUpdateAction(new StoreOrUpdateAction(UpdateTemplateRequest::class, UpdateTemplateJob::class));
     }
-
 }

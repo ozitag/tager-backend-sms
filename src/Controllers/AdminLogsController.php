@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Controllers;
 
+use OZiTAG\Tager\Backend\Crud\Actions\IndexAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\CrudController;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 
@@ -33,6 +34,8 @@ class AdminLogsController extends CrudController
             'createdAt' => 'created_at:datetime',
             'updatedAt' => 'updated_at:datetime'
         ]);
+
+        $this->setIndexAction((new IndexAction())->enablePagination());
     }
 
 }
