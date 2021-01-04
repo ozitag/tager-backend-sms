@@ -11,17 +11,17 @@ use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
 class AdminTemplatesController extends CrudController
 {
-    protected $hasIndexAction = true;
+    protected bool $hasIndexAction = true;
 
-    protected $hasViewAction = true;
+    protected bool $hasViewAction = true;
 
-    protected $hasStoreAction = false;
+    protected bool $hasStoreAction = false;
 
-    protected $hasUpdateAction = true;
+    protected bool $hasUpdateAction = true;
 
-    protected $hasDeleteAction = false;
+    protected bool $hasDeleteAction = false;
 
-    protected $hasMoveAction = false;
+    protected bool $hasMoveAction = false;
 
     public function __construct(SmsTemplateRepository $repository)
     {
