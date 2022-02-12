@@ -2,11 +2,9 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Enums;
 
-use OZiTAG\Tager\Backend\Core\Enums\Enum;
-
-class SmsScope extends Enum
+enum SmsScope:string
 {
-    const ViewTemplates = 'sms.view-templates';
-    const EditTemplates = 'sms.edit-templates';
-    const ViewLogs = 'sms.edit-logs';
+    case ViewTemplates = 'sms.view-templates';
+    case EditTemplates = 'sms.edit-templates';
+    case ViewLogs = 'sms.edit-logs';
 }

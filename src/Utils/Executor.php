@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Utils;
 
-use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
+use OZiTAG\Tager\Backend\Sms\Enums\SmsLogStatus;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsException;
 use OZiTAG\Tager\Backend\Sms\Jobs\SendSmsJob;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
@@ -83,7 +83,7 @@ class Executor
         return is_array($this->recipients) ? $this->recipients : [$this->recipients];
     }
 
-    private function createLogItem($recipient, $message, $status = LogStatus::Created)
+    private function createLogItem($recipient, $message, SmsLogStatus $status = SmsLogStatus::Created)
     {
         if (TagerSmsConfig::hasDatabase() == false) {
             return null;
@@ -93,7 +93,7 @@ class Executor
         return $this->smsLogRepository->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
-            'status' => $status,
+            'status' => $status->value,
             'template_id' => $this->templateHelper->getTemplateDatabaseId($this->template)
         ]);
     }
@@ -118,11 +118,11 @@ class Executor
         $recipient = $this->preparePhoneNumber($recipient);
 
         if (TagerSmsConfig::isDisabled()) {
-            $this->createLogItem($recipient, $message, LogStatus::Disabled);
+            $this->createLogItem($recipient, $message, SmsLogStatus::Disabled);
             return;
         }
 
-        $log = $this->createLogItem($recipient, $message, LogStatus::Created);
+        $log = $this->createLogItem($recipient, $message, SmsLogStatus::Created);
 
         dispatch(new SendSmsJob(
             $recipient,

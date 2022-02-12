@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use OZiTAG\Tager\Backend\Core\Models\TModel;
 
 /**
  * Class TagerSmsLog
@@ -17,15 +17,12 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property TagerSmsTemplate $template
  */
-class TagerSmsLog extends Model
+class TagerSmsLog extends TModel
 {
     protected $table = 'tager_sms_logs';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    static string $defaultOrder = 'created_at desc';
+
     protected $fillable = [
         'template_id',
         'recipient',
@@ -35,20 +32,8 @@ class TagerSmsLog extends Model
         'service_response',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function template()
     {
         return $this->belongsTo(TagerSmsTemplate::class);
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('order', function ($builder) {
-            $builder->orderBy('created_at', 'desc');
-        });
     }
 }

@@ -3,19 +3,20 @@
 namespace OZiTAG\Tager\Backend\Sms\Jobs;
 
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
+use OZiTAG\Tager\Backend\Sms\Enums\SmsLogStatus;
 use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 
 class SetLogStatusJob extends Job
 {
     private $logId;
 
-    private $status;
+    private SmsLogStatus $status;
 
     private $error;
 
     private $response;
 
-    public function __construct($logId, $status, $response, $error = null)
+    public function __construct($logId, SmsLogStatus $status, $response, $error = null)
     {
         $this->logId = $logId;
         $this->status = $status;
@@ -35,7 +36,7 @@ class SetLogStatusJob extends Job
         }
 
         $repository->fillAndSave([
-            'status' => $this->status,
+            'status' => $this->status->value,
             'error' => $this->error,
             'service_response' => $this->response
         ]);

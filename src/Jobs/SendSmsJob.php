@@ -4,7 +4,7 @@ namespace OZiTAG\Tager\Backend\Sms\Jobs;
 
 use OZiTAG\Tager\Backend\Core\Jobs\QueueJob;
 use OZiTAG\Tager\Backend\Sms\Contracts\IService;
-use OZiTAG\Tager\Backend\Sms\Enums\LogStatus;
+use OZiTAG\Tager\Backend\Sms\Enums\SmsLogStatus;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsInvalidConfigurationException;
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsServiceException;
 use OZiTAG\Tager\Backend\Sms\Services\ServiceFactory;
@@ -25,7 +25,7 @@ class SendSmsJob extends QueueJob
         $this->logId = $logId;
     }
 
-    private function setLogStatus($status, $response = null, $error = null)
+    private function setLogStatus(SmsLogStatus $status, $response = null, $error = null)
     {
         dispatch(new SetLogStatusJob($this->logId, $status, $response, $error));
     }
@@ -72,19 +72,19 @@ class SendSmsJob extends QueueJob
     public function handle()
     {
         if ($this->isRecipientAllowed() == false) {
-            $this->setLogStatus(LogStatus::Skip);
+            $this->setLogStatus(SmsLogStatus::Skip);
             return;
         }
 
-        $this->setLogStatus(LogStatus::Sending);
+        $this->setLogStatus(SmsLogStatus::Sending);
 
         try {
             $this->service()->send($this->recipient, $this->message);
-            $this->setLogStatus(LogStatus::Success, $this->service()->getResponse());
+            $this->setLogStatus(SmsLogStatus::Success, $this->service()->getResponse());
         } catch (TagerSmsServiceException $exception) {
-            $this->setLogStatus(LogStatus::Failure, null, 'Service Error: ' . $exception->getMessage());
+            $this->setLogStatus(SmsLogStatus::Failure, null, 'Service Error: ' . $exception->getMessage());
         } catch (\Exception $exception) {
-            $this->setLogStatus(LogStatus::Failure, null, $exception->getMessage());
+            $this->setLogStatus(SmsLogStatus::Failure, null, $exception->getMessage());
         }
     }
 }

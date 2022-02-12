@@ -40,9 +40,9 @@ class SmsServiceProvider extends ServiceProvider
         }
 
         TagerScopes::registerGroup('SMS', [
-            SmsScope::EditTemplates => 'Edit templates',
-            SmsScope::ViewTemplates => 'View templates',
-            SmsScope::ViewLogs => 'View logs',
+            SmsScope::EditTemplates->value => 'Edit templates',
+            SmsScope::ViewTemplates->value => 'View templates',
+            SmsScope::ViewLogs->value => 'View logs',
         ]);
     }
 }

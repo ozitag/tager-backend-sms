@@ -2,8 +2,8 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OZiTAG\Tager\Backend\Core\Models\TModel;
 
 /**
  * Class TagerSmsTemplate
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $recipients
  * @property bool $changed_by_admin
  */
-class TagerSmsTemplate extends Model
+class TagerSmsTemplate extends TModel
 {
     use SoftDeletes;
 
