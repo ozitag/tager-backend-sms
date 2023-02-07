@@ -12,7 +12,7 @@ use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
 class SendSmsJob extends QueueJob
 {
-    public function __construct(protected $recipient,protected  $message, protected $logId, protected $options)
+    public function __construct(protected $recipient,protected  $message, protected $options, protected $logId)
     {
     }
 
