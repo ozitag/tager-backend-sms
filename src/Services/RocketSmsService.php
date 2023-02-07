@@ -6,17 +6,17 @@ use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsServiceException;
 
 class RocketSmsService extends BaseService
 {
-    private $response;
+    private ?string $response;
 
-    public function send($recipient, $message)
+    public function send(string $recipient, string $message, array $options = [])
     {
-        return $this->runMethod('send', [
+        return $this->runMethod('send', array_merge([
             'phone' => $recipient,
             'text' => $message
-        ]);
+        ], $options));
     }
 
-    public function getResponse()
+    public function getResponse(): ?string
     {
         return $this->response;
     }
@@ -40,7 +40,6 @@ class RocketSmsService extends BaseService
         $response = curl_exec($curl);
         $this->response = $response;
         $result = @json_decode($response, true);
-
         curl_close($curl);
 
         if (isset($result['error'])) {

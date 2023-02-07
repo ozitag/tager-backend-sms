@@ -6,35 +6,17 @@ use OZiTAG\Tager\Backend\Sms\Utils\Executor;
 
 class TagerSms
 {
-    private $executor;
-
-    public function __construct(Executor $executor)
+    public function __construct(protected Executor $executor)
     {
-        $this->executor = $executor;
     }
 
-    /**
-     * @param string[] $recipients
-     * @param string $text
-     * @throws Exceptions\TagerSmsException
-     */
-    public function sendRaw($recipients, $text)
+    public function sendRaw(array|string $recipients, string $text, array $options = [])
     {
-        $this->executor->setRecipients($recipients);
-        $this->executor->setMessage($text);
-        $this->executor->execute();
+        $this->executor->setRecipients($recipients)->setMessage($text)->setOptions($options)->execute();
     }
 
-    /**
-     * @param string[] $recipients
-     * @param string $template
-     * @param string[]|null $templateFields
-     * @throws Exceptions\TagerSmsException
-     */
-    public function sendUsingTemplate($recipients, $template, $templateFields = null)
+    public function sendUsingTemplate(array|string $recipients, string $template, ?array $templateFields = null, array $options = [])
     {
-        $this->executor->setRecipients($recipients);
-        $this->executor->setTemplate($template, $templateFields);
-        $this->executor->execute();
+        $this->executor->setRecipients($recipients)->setTemplate($template, $templateFields)->setOptions($options)->execute();
     }
 }

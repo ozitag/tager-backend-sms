@@ -9,40 +9,42 @@ use OZiTAG\Tager\Backend\Sms\Repositories\SmsLogRepository;
 
 class Executor
 {
-    /** @var SmsLogRepository */
-    private $smsLogRepository;
-
-    /** @var TemplateHelper */
-    private $templateHelper;
-
-    public function __construct(SmsLogRepository $smsLogRepository, TemplateHelper $templateHelper)
+    public function __construct(protected SmsLogRepository $smsLogRepository, protected TemplateHelper $templateHelper)
     {
-        $this->smsLogRepository = $smsLogRepository;
-        $this->templateHelper = $templateHelper;
     }
 
-    private $recipients = [];
+    private array|string $recipients = [];
 
-    private $template = null;
+    private string $template;
 
-    private $templateFields = null;
+    private ?array $templateFields = null;
 
-    private $message = null;
+    private string $message;
 
-    public function setTemplate($template, $templateFields)
+    private array $options = [];
+
+    public function setTemplate(string $template, ?array $templateFields)
     {
         $this->template = $template;
         $this->templateFields = $templateFields;
+        return $this;
     }
 
-    public function setRecipients($value)
+    public function setRecipients(array|string $value)
     {
         $this->recipients = $value;
+        return $this;
     }
 
-    public function setMessage($value)
+    public function setMessage(string $value)
     {
         $this->message = $value;
+        return $this;
+    }
+
+    public function setOptions(array $options = []){
+        $this->options = $options;
+        return $this;
     }
 
     /**
@@ -85,12 +87,11 @@ class Executor
 
     private function createLogItem($recipient, $message, SmsLogStatus $status = SmsLogStatus::Created)
     {
-        if (TagerSmsConfig::hasDatabase() == false) {
+        if (!TagerSmsConfig::hasDatabase()) {
             return null;
         }
 
-        $this->smsLogRepository->reset();
-        return $this->smsLogRepository->fillAndSave([
+        return $this->smsLogRepository->reset()->fillAndSave([
             'recipient' => $recipient,
             'body' => $message,
             'status' => $status->value,
@@ -98,7 +99,7 @@ class Executor
         ]);
     }
 
-    private function preparePhoneNumber($recipient)
+    private function preparePhoneNumber(string $recipient): string
     {
         $formatter = TagerSmsConfig::getRecipientFormatter();
         if ($formatter) {
@@ -108,12 +109,7 @@ class Executor
         return preg_replace('/[^0-9,.]/', '', $recipient);
     }
 
-    /**
-     * @param string $recipient
-     * @param string $message
-     * @throws \Exception
-     */
-    private function send($recipient, $message)
+    private function send(string $recipient, string $message)
     {
         $recipient = $this->preparePhoneNumber($recipient);
 
@@ -127,7 +123,8 @@ class Executor
         dispatch(new SendSmsJob(
             $recipient,
             $message,
-            $log ? $log->id : null
+            $this->options,
+            $log?->id
         ));
     }
 

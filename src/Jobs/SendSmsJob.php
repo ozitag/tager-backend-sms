@@ -12,17 +12,8 @@ use OZiTAG\Tager\Backend\Sms\Utils\TagerSmsConfig;
 
 class SendSmsJob extends QueueJob
 {
-    private $recipient;
-
-    private $message;
-
-    private $logId;
-
-    public function __construct($recipient, $message, $logId)
+    public function __construct(protected $recipient,protected  $message, protected $logId, protected $options)
     {
-        $this->recipient = $recipient;
-        $this->message = $message;
-        $this->logId = $logId;
     }
 
     private function setLogStatus(SmsLogStatus $status, $response = null, $error = null)
@@ -71,7 +62,7 @@ class SendSmsJob extends QueueJob
 
     public function handle()
     {
-        if ($this->isRecipientAllowed() == false) {
+        if (!$this->isRecipientAllowed()) {
             $this->setLogStatus(SmsLogStatus::Skip);
             return;
         }
@@ -79,7 +70,7 @@ class SendSmsJob extends QueueJob
         $this->setLogStatus(SmsLogStatus::Sending);
 
         try {
-            $this->service()->send($this->recipient, $this->message);
+            $this->service()->send($this->recipient, $this->message, $this->options);
             $this->setLogStatus(SmsLogStatus::Success, $this->service()->getResponse());
         } catch (TagerSmsServiceException $exception) {
             $this->setLogStatus(SmsLogStatus::Failure, null, 'Service Error: ' . $exception->getMessage());
