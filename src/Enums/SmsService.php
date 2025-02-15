@@ -2,7 +2,8 @@
 
 namespace OZiTAG\Tager\Backend\Sms\Enums;
 
-enum SmsService:string
+enum SmsService: string
 {
     case RocketSms = 'RocketSms';
+    case Messaggio = 'Messaggio';
 }

@@ -15,7 +15,7 @@ class Executor
 
     private array|string $recipients = [];
 
-    private string $template;
+    private ?string $template = null;
 
     private ?array $templateFields = null;
 
@@ -42,7 +42,8 @@ class Executor
         return $this;
     }
 
-    public function setOptions(array $options = []){
+    public function setOptions(array $options = [])
+    {
         $this->options = $options;
         return $this;
     }
@@ -95,7 +96,7 @@ class Executor
             'recipient' => $recipient,
             'body' => $message,
             'status' => $status->value,
-            'template_id' => $this->templateHelper->getTemplateDatabaseId($this->template)
+            'template_id' => $this->template ? $this->templateHelper->getTemplateDatabaseId($this->template) : null
         ]);
     }
 

@@ -13,6 +13,9 @@ class ServiceFactory
             case SmsService::RocketSms->value:
                 $service = new RocketSmsService();
                 break;
+            case SmsService::Messaggio->value:
+                $service = new MessaggioService();
+                break;
             default:
                 return null;
         }
