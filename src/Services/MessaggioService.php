@@ -4,33 +4,6 @@ namespace OZiTAG\Tager\Backend\Sms\Services;
 
 use OZiTAG\Tager\Backend\Sms\Exceptions\TagerSmsServiceException;
 
-/*
- * curl --location "https://msg.messaggio.com/api/v1/send" \
--H "Accept: application/json" \
--H "Content-Type: application/json" \
--H "Messaggio-Login: cu9sicut5vjs7398p9c0" \
---data '{
-          "recipients": [
-            {
-              "phone": "375296704790"
-            }
-          ],
-          "channels": [
-            "sms"
-          ],
-          "sms": {
-            "from": "cu9sjr6t5vjs7398p9p0",
-            "content": [
-              {
-                "type": "text",
-                "text": "Нужен код от E-Mail для GetClean Cyprus"
-              }
-            ]
-          }
-        }'
-
- */
-
 class MessaggioService extends BaseService
 {
     private ?string $response;
@@ -78,15 +51,14 @@ class MessaggioService extends BaseService
         $info = curl_getinfo($curl);
         curl_close($curl);
 
-
         if ($info['http_code'] >= 400) {
-            print_r($result);
-            exit;
             throw new TagerSmsServiceException($result['detail']);
         }
 
-        print_r($result);
-        exit;
+        $response = $result['messages'][0] ?? null;
+        if (isset($response['error'])) {
+            throw new TagerSmsServiceException($response['error']['title']);
+        }
 
         return $result;
     }
