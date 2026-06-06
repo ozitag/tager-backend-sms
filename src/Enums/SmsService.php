@@ -6,4 +6,5 @@ enum SmsService: string
 {
     case RocketSms = 'RocketSms';
     case Messaggio = 'Messaggio';
+    case SmsBy = 'SmsBy';
 }

@@ -16,6 +16,9 @@ class ServiceFactory
             case SmsService::Messaggio->value:
                 $service = new MessaggioService();
                 break;
+            case SmsService::SmsBy->value:
+                $service = new SmsByService();
+                break;
             default:
                 return null;
         }
