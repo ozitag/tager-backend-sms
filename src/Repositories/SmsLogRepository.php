@@ -14,7 +14,7 @@ class SmsLogRepository extends EloquentRepository implements ISearchable
         parent::__construct($model);
     }
 
-    public function searchByQuery(?string $query, Builder $builder = null): ?Builder
+    public function searchByQuery(?string $query, ?Builder $builder = null): ?Builder
     {
         $builder = $builder ?: $this->model;
 
